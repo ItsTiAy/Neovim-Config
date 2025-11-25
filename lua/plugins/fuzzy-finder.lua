@@ -23,6 +23,7 @@ return {
           mappings = {
             i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           },
+          minimum_grep_characters = 3,
         },
         pickers = {},
         extensions = {

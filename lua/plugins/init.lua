@@ -22,6 +22,7 @@ require('lazy').setup({
   { import = 'plugins.indent' },
   { import = 'plugins.keybinding' },
   { import = 'plugins.lsp' },
+  { import = 'plugins.formatting' },
   { import = 'plugins.nvim-dev' },
   { import = 'plugins.statusline' },
   { import = 'plugins.syntax' },

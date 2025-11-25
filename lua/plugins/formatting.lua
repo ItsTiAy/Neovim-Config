@@ -28,6 +28,10 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        css = { 'prettierd' },
+        scss = { 'prettierd' },
+        html = { 'prettierd' },
+        javascript = { 'prettierd' },
       },
     },
   },
