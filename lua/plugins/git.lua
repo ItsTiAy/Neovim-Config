@@ -2,6 +2,7 @@ return {
   {
     'lewis6991/gitsigns.nvim',
     opts = {
+      current_line_blame = true,
       on_attach = function(bufnr)
         local gitsigns = require 'gitsigns'
 
@@ -58,9 +59,9 @@ return {
     'NeogitOrg/neogit',
     lazy = true,
     dependencies = {
-      'nvim-lua/plenary.nvim', -- required
-      'sindrets/diffview.nvim', -- optional - Diff integration
-      'nvim-telescope/telescope.nvim', -- optional
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
     },
     cmd = 'Neogit',
     keys = {

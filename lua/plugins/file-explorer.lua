@@ -23,10 +23,16 @@ local function my_on_attach(bufnr)
   api.config.mappings.default_on_attach(bufnr)
 
   vim.keymap.set('n', '<BS>', api.tree.change_root_to_parent, opts 'Up')
+  vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
 end
 
 return {
   'nvim-tree/nvim-tree.lua',
+  version = '*',
+  lazy = false,
+  dependencies = {
+    'nvim-tree/nvim-web-devicons',
+  },
   keys = {
     { '\\', ':NvimTreeToggle<CR>', desc = 'Nvim-Tree Toggle', silent = true },
   },
