@@ -21,13 +21,10 @@ return {
     lazy = false,
     ---@type snacks.Config
     opts = {
-      image = {
-        enabled = true,
-      },
       dashboard = {
         enabled = true,
       },
-      notifier = {
+      indent = {
         enabled = true,
       },
     },
@@ -40,11 +37,24 @@ return {
         desc = 'Toggle Terminal',
       },
     },
+    config = function(_, opts)
+      require('snacks').setup(opts)
+      vim.api.nvim_create_autocmd('TermOpen', {
+        callback = function()
+          vim.keymap.set('t', '<Esc>', [[<Esc><C-\><C-n>]], {
+            buffer = true,
+            noremap = true,
+            silent = true,
+          })
+        end,
+      })
+    end,
   },
   {
     'gbprod/substitute.nvim',
     opts = {},
   },
+  --[[ 
   {
     'tpope/vim-surround',
   },
@@ -56,5 +66,5 @@ return {
         enable = true,
       },
     },
-  },
+  }, ]]
 }

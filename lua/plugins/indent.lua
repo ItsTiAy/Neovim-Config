@@ -1,7 +1,4 @@
 return {
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    opts = {},
-  },
+  'NMAC427/guess-indent.nvim',
+  opts = {},
 }

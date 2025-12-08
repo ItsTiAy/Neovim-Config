@@ -35,6 +35,7 @@ return {
   },
   keys = {
     { '\\', ':NvimTreeToggle<CR>', desc = 'Nvim-Tree Toggle', silent = true },
+    { '<Esc>', ':NvimTreeClose<CR>', desc = 'Nvim-Tree Close', silent = true },
   },
   opts = {
     on_attach = my_on_attach,
@@ -97,5 +98,6 @@ return {
     },
     hijack_cursor = true,
     sync_root_with_cwd = true,
+    respect_buf_cwd = true,
   },
 }
