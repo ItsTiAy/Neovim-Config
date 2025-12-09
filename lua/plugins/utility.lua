@@ -19,20 +19,7 @@ return {
     event = 'VeryLazy',
     opts = {
       lsp = {
-        progress = {
-          enabled = false,
-        },
-        message = {
-          enabled = false,
-        },
-        hover = {
-          enabled = false,
-        },
-        signature = {
-          enabled = false,
-        },
         override = {
-          ['vim.diagnostic.config'] = false,
           ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
           ['vim.lsp.util.stylize_markdown'] = true,
           ['cmp.entry.get_documentation'] = true,
@@ -44,14 +31,6 @@ return {
         inc_rename = false,
         lsp_doc_border = true,
       },
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'markdown',
-        callback = function(event)
-          vim.schedule(function()
-            require('noice.text.markdown').keys(event.buf)
-          end)
-        end,
-      }),
     },
     dependencies = {
       'MunifTanjim/nui.nvim',

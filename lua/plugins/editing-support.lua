@@ -27,6 +27,13 @@ return {
       indent = {
         enabled = true,
       },
+      styles = {
+        terminal = {
+          keys = {
+            term_normal = { '<esc>' },
+          },
+        },
+      },
     },
     keys = {
       {
@@ -37,18 +44,6 @@ return {
         desc = 'Toggle Terminal',
       },
     },
-    config = function(_, opts)
-      require('snacks').setup(opts)
-      vim.api.nvim_create_autocmd('TermOpen', {
-        callback = function()
-          vim.keymap.set('t', '<Esc>', [[<Esc><C-\><C-n>]], {
-            buffer = true,
-            noremap = true,
-            silent = true,
-          })
-        end,
-      })
-    end,
   },
   {
     'gbprod/substitute.nvim',
