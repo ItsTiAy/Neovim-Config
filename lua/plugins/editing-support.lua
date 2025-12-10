@@ -30,7 +30,16 @@ return {
       styles = {
         terminal = {
           keys = {
-            term_normal = { '<esc>' },
+            term_normal = {
+              '<esc>',
+              function()
+                vim.cmd 'stopinsert'
+                return '<esc>'
+              end,
+              mode = 't',
+              expr = true,
+              desc = 'Escape to normal mode',
+            },
           },
         },
       },
