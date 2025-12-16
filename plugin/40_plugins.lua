@@ -204,11 +204,14 @@ end)
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
 -- MiniDeps.now(function()
 --   -- Install only those that you need
-add 'sainnhe/everforest'
-add 'Shatur/neovim-ayu'
-add 'ellisonleao/gruvbox.nvim'
-add 'rebelot/kanagawa.nvim'
+-- add 'sainnhe/everforest'
+-- add 'Shatur/neovim-ayu'
+-- add 'ellisonleao/gruvbox.nvim'
+-- add 'rebelot/kanagawa.nvim'
+-- add 'kepano/flexoki'
+-- add 'folke/tokyonight.nvim'
+add 'rose-pine/neovim'
 --
 --   -- Enable only one
-vim.cmd 'color ayu-dark'
+vim.cmd 'color rose-pine-main'
 -- end)
