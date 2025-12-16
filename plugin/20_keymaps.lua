@@ -13,11 +13,19 @@ local nmap = function(lhs, rhs, desc)
   -- See `:h vim.keymap.set()`
   vim.keymap.set('n', lhs, rhs, { desc = desc })
 end
+local tmap = function(lhs, rhs, desc)
+  -- See `:h vim.keymap.set()`
+  vim.keymap.set('t', lhs, rhs, { desc = desc })
+end
 
 -- Paste linewise before/after current line
 -- Usage: `yiw` to yank a word and `]p` to put it on the next line.
 nmap('[p', '<Cmd>exe "put! " . v:register<CR>', 'Paste Above')
 nmap(']p', '<Cmd>exe "put "  . v:register<CR>', 'Paste Below')
+
+nmap('<Esc>', '<cmd>nohlsearch<CR>', 'Clear search highlight')
+
+tmap('<Esc>', '<C-\\><C-n>', 'Exit terminal mode')
 
 -- Many general mappings are created by 'mini.basics'. See 'plugin/30_mini.lua'
 
@@ -129,8 +137,8 @@ nmap_leader('eq', explore_quickfix,                         'Quickfix')
 local pick_added_hunks_buf = '<Cmd>Pick git_hunks path="%" scope="staged"<CR>'
 local pick_workspace_symbols_live = '<Cmd>Pick lsp scope="workspace_symbol_live"<CR>'
 
-nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>',            '"/" history')
-nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>',            '":" history')
+nmap_leader('f/', '<Cmd>Pick history scope="/"<CR>',            'Search history')
+nmap_leader('f:', '<Cmd>Pick history scope=":"<CR>',            'Command history')
 nmap_leader('fa', '<Cmd>Pick git_hunks scope="staged"<CR>',     'Added hunks (all)')
 nmap_leader('fA', pick_added_hunks_buf,                         'Added hunks (buf)')
 nmap_leader('fb', '<Cmd>Pick buffers<CR>',                      'Buffers')
@@ -168,12 +176,11 @@ nmap_leader('gc', '<Cmd>Git commit<CR>',                    'Commit')
 nmap_leader('gC', '<Cmd>Git commit --amend<CR>',            'Commit amend')
 nmap_leader('gd', '<Cmd>Git diff<CR>',                      'Diff')
 nmap_leader('gD', '<Cmd>Git diff -- %<CR>',                 'Diff buffer')
+nmap_leader('gg', '<Cmd>Neogit cwd=%:p:h<CR>',              'Show Neogit UI')
 nmap_leader('gl', '<Cmd>' .. git_log_cmd .. '<CR>',         'Log')
 nmap_leader('gL', '<Cmd>' .. git_log_buf_cmd .. '<CR>',     'Log buffer')
 nmap_leader('go', '<Cmd>lua MiniDiff.toggle_overlay()<CR>', 'Toggle overlay')
 nmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>',  'Show at cursor')
-
-nmap_leader('gg', '<Cmd>Neogit cwd=%:p:h<CR>',              'Show Neogit UI')
 
 xmap_leader('gs', '<Cmd>lua MiniGit.show_at_cursor()<CR>', 'Show at selection')
 
@@ -226,8 +233,8 @@ nmap_leader('sr', '<Cmd>lua MiniSessions.select("read")<CR>',   'Read')
 nmap_leader('sw', '<Cmd>lua MiniSessions.write()<CR>',          'Write current')
 
 -- t is for 'Terminal'
-nmap_leader('tT', '<Cmd>horizontal term<CR>', 'Terminal (horizontal)')
-nmap_leader('tt', '<Cmd>vertical term<CR>',   'Terminal (vertical)')
+nmap_leader('tt', '<Cmd>horizontal term<CR>', 'Terminal (horizontal)')
+nmap_leader('tT', '<Cmd>vertical term<CR>',   'Terminal (vertical)')
 
 -- v is for 'Visits'. Common usage:
 -- - `<Leader>vv` - add    "core" label to current file.

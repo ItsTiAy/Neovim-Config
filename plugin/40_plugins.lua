@@ -131,12 +131,16 @@ later(function()
       css = { 'prettierd' },
       html = { 'prettierd' },
       javascript = { 'prettierd' },
+      typescript = { 'prettierd' },
       fsharp = { 'fantomas' },
     },
     default_format_opts = {
       lsp_format = 'fallback',
     },
-    format_on_save = { timeout_ms = 2500 },
+    format_on_save = {
+      lsp_format = 'fallback',
+      timeout_ms = 2500,
+    },
   }
 end)
 
@@ -158,19 +162,25 @@ end)
 -- 'mason-org/mason.nvim' (a.k.a. "Mason") is a great tool (package manager) for
 -- installing external language servers, formatters, and linters. It provides
 -- a unified interface for installing, updating, and deleting such programs.
---
--- The caveat is that these programs will be set up to be mostly used inside Neovim.
--- If you need them to work elsewhere, consider using other package managers.
---
--- You can use it like so:
-later(function()
-  add 'mason-org/mason.nvim'
-  require('mason').setup()
-end)
 
 later(function()
-  add 'mason-org/mason-lspconfig.nvim'
+  add 'mason-org/mason.nvim'
+
+  add {
+    source = 'mason-org/mason-lspconfig.nvim',
+    depends = {
+      'mason-org/mason.nvim',
+      'neovim/nvim-lspconfig',
+    },
+  }
+
+  require('mason').setup()
   require('mason-lspconfig').setup()
+
+  local lspconfig = require 'lspconfig'
+  for _, server in ipairs(require('mason-lspconfig').get_installed_servers()) do
+    vim.lsp.config(server, {})
+  end
 end)
 
 later(function()
@@ -183,19 +193,22 @@ later(function()
     commit_editor = {
       kind = 'floating',
     },
+    floating = {
+      border = 'single',
+    },
   }
 end)
 
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
-MiniDeps.now(function()
-  --   -- Install only those that you need
-  add 'catppuccin/nvim'
-  --   add('sainnhe/everforest')
-  --   add('Shatur/neovim-ayu')
-  --   add('ellisonleao/gruvbox.nvim')
-  --
-  --   -- Enable only one
-  vim.cmd 'color catppuccin-mocha'
-end)
+-- MiniDeps.now(function()
+--   -- Install only those that you need
+add 'sainnhe/everforest'
+add 'Shatur/neovim-ayu'
+add 'ellisonleao/gruvbox.nvim'
+add 'rebelot/kanagawa.nvim'
+--
+--   -- Enable only one
+vim.cmd 'color ayu-dark'
+-- end)
