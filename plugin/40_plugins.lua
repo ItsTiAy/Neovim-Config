@@ -197,6 +197,11 @@ later(function()
       border = 'single',
     },
   }
+
+  add 'lewis6991/gitsigns.nvim'
+  require('gitsigns').setup {
+    current_line_blame = true,
+  }
 end)
 
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
