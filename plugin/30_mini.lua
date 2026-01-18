@@ -106,7 +106,7 @@ now_if_args(function()
   -- searches up the file tree until the first root marker ('.git' or 'Makefile')
   -- and sets their parent directory as a current directory.
   -- This is helpful when simultaneously dealing with files from several projects.
-  MiniMisc.setup_auto_root()
+  MiniMisc.setup_auto_root { '.git', 'package.json', 'Makefile' }
 
   -- Restore latest cursor position on file open
   MiniMisc.setup_restore_cursor()
@@ -146,7 +146,17 @@ end)
 -- - `:h MiniStarter-example-config` - non-default config examples
 -- - `:h MiniStarter-lifecycle` - how to work with Starter buffer
 now(function()
-  require('mini.starter').setup()
+  require('mini.starter').setup {
+    header = [[
+ ██████   █████ █████   █████ █████ ██████   ██████
+░░██████ ░░███ ░░███   ░░███ ░░███ ░░██████ ██████ 
+ ░███░███ ░███  ░███    ░███  ░███  ░███░█████░███ 
+ ░███░░███░███  ░███    ░███  ░███  ░███░░███ ░███ 
+ ░███ ░░██████  ░░███   ███   ░███  ░███ ░░░  ░███ 
+ ░███  ░░█████   ░░░█████░    ░███  ░███      ░███ 
+ █████  ░░█████    ░░███      █████ █████     █████
+░░░░░    ░░░░░      ░░░      ░░░░░ ░░░░░     ░░░░░ ]],
+  }
 end)
 
 -- Statusline. Sets `:h 'statusline'` to show more info in a line below window.
