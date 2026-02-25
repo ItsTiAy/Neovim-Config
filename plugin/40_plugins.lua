@@ -10,7 +10,7 @@
 
 -- Make concise helpers for installing/adding plugins in two stages
 local add, later = MiniDeps.add, MiniDeps.later
-local now_if_args = _G.Config.now_if_args
+local now_if_args = Config.now_if_args
 
 -- Tree-sitter ================================================================
 
@@ -30,11 +30,16 @@ local now_if_args = _G.Config.now_if_args
 --   textobjects (see `:h text-objects`, `:h MiniAi.gen_spec.treesitter()`).
 --
 -- Add these plugins now if file (and not 'mini.starter') is shown after startup.
+--
+-- Troubleshooting:
+-- - Run `:checkhealth vim.treesitter nvim-treesitter` to see potential issues.
+-- - In case of errors related to queries for Neovim bundled parsers (like `lua`,
+--   `vimdoc`, `markdown`, etc.), manually install them via 'nvim-treesitter'
+--   with `:TSInstall <language>`. Be sure to have necessary system dependencies
+--   (see MiniMax README section for software requirements).
 now_if_args(function()
   add {
     source = 'nvim-treesitter/nvim-treesitter',
-    -- Use `main` branch since `master` branch is frozen, yet still default
-    checkout = 'main',
     -- Update tree-sitter parser after plugin is updated
     hooks = {
       post_checkout = function()
@@ -42,23 +47,25 @@ now_if_args(function()
       end,
     },
   }
-  add {
-    source = 'nvim-treesitter/nvim-treesitter-textobjects',
-    -- Same logic as for 'nvim-treesitter'
-    checkout = 'main',
-  }
+  add 'nvim-treesitter/nvim-treesitter-textobjects'
 
   -- Define languages which will have parsers installed and auto enabled
+  -- After changing this, restart Neovim once to install necessary parsers. Wait
+  -- for the installation to finish before opening a file for added language(s).
   local languages = {
     -- These are already pre-installed with Neovim. Used as an example.
     'lua',
     'vimdoc',
     'markdown',
+    'css',
+    'html',
+    'javascript',
+    'typescript',
     -- Add here more languages with which you want to use tree-sitter
     -- To see available languages:
     -- - Execute `:=require('nvim-treesitter').get_available()`
     -- - Visit 'SUPPORTED_LANGUAGES.md' file at
-    --   https://github.com/nvim-treesitter/nvim-treesitter/blob/main
+    --   https://github.com/nvim-treesitter/nvim-treesitter
   }
   local isnt_installed = function(lang)
     return #vim.api.nvim_get_runtime_file('parser/' .. lang .. '.*', false) == 0
@@ -78,7 +85,7 @@ now_if_args(function()
   local ts_start = function(ev)
     vim.treesitter.start(ev.buf)
   end
-  _G.Config.new_autocmd('FileType', filetypes, ts_start, 'Start tree-sitter')
+  Config.new_autocmd('FileType', filetypes, ts_start, 'Start tree-sitter')
 end)
 
 -- Language servers ===========================================================
@@ -103,9 +110,10 @@ now_if_args(function()
   -- the rules provided by 'nvim-lspconfig'.
   -- Use `:h vim.lsp.config()` or 'after/lsp/' directory to configure servers.
   -- Uncomment and tweak the following `vim.lsp.enable()` call to enable servers.
-  -- vim.lsp.enable({
-  --   -- For example, if `lua-language-server` is installed, use `'lua_ls'` entry
-  -- })
+  vim.lsp.enable {
+    -- For example, if `lua-language-server` is installed, use `'lua_ls'` entry
+    'glsl_analyzer',
+  }
 end)
 
 -- Formatting =================================================================
@@ -124,6 +132,10 @@ later(function()
   -- - `:h conform-options`
   -- - `:h conform-formatters`
   require('conform').setup {
+    default_format_opts = {
+      -- Allow formatting from LSP server if no dedicated formatter is available
+      lsp_format = 'fallback',
+    },
     -- Map of filetype to formatters
     -- Make sure that necessary CLI tool is available
     formatters_by_ft = {
@@ -133,9 +145,6 @@ later(function()
       javascript = { 'prettierd' },
       typescript = { 'prettierd' },
       fsharp = { 'fantomas' },
-    },
-    default_format_opts = {
-      lsp_format = 'fallback',
     },
     format_on_save = {
       lsp_format = 'fallback',
@@ -162,8 +171,11 @@ end)
 -- 'mason-org/mason.nvim' (a.k.a. "Mason") is a great tool (package manager) for
 -- installing external language servers, formatters, and linters. It provides
 -- a unified interface for installing, updating, and deleting such programs.
+--
+-- The caveat is that these programs will be set up to be mostly used inside Neovim.
+-- If you need them to work elsewhere, consider using other package managers.
 
-later(function()
+now_if_args(function()
   add 'mason-org/mason.nvim'
 
   add {
