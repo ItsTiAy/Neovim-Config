@@ -22,10 +22,9 @@
 
 -- To minimize the time until first screen draw, modules are enabled in two steps:
 -- - Step one enables everything that is needed for first draw with `now()`.
---   Sometimes is needed only if Neovim is started as `nvim -- path/to/file`.
+--   Sometimes needed only if Neovim is started as `nvim -- path/to/file`.
 -- - Everything else is delayed until the first draw with `later()`.
-local now, later = MiniDeps.now, MiniDeps.later
-local now_if_args = Config.now_if_args
+local now, now_if_args, later = Config.now, Config.now_if_args, Config.later
 
 -- Step one ===================================================================
 -- Enable 'miniwinter' color scheme. It comes with 'mini.nvim' and uses 'mini.hues'.
@@ -34,9 +33,9 @@ local now_if_args = Config.now_if_args
 -- - `:h mini.nvim-color-schemes` - list of other color schemes
 -- - `:h MiniHues-examples` - how to define highlighting with 'mini.hues'
 -- - 'plugin/40_plugins.lua' honorable mentions - other good color schemes
--- now(function()
---   vim.cmd 'colorscheme miniwinter'
--- end)
+now(function()
+  vim.cmd 'colorscheme miniwinter'
+end)
 
 -- You can try these other 'mini.hues'-based color schemes (uncomment with `gcc`):
 -- now(function() vim.cmd('colorscheme minispring') end)
@@ -119,17 +118,7 @@ end)
 -- - `:h MiniStarter-example-config` - non-default config examples
 -- - `:h MiniStarter-lifecycle` - how to work with Starter buffer
 now(function()
-  require('mini.starter').setup {
-    header = [[
- ██████   █████ █████   █████ █████ ██████   ██████
-░░██████ ░░███ ░░███   ░░███ ░░███ ░░██████ ██████ 
- ░███░███ ░███  ░███    ░███  ░███  ░███░█████░███ 
- ░███░░███░███  ░███    ░███  ░███  ░███░░███ ░███ 
- ░███ ░░██████  ░░███   ███   ░███  ░███ ░░░  ░███ 
- ░███  ░░█████   ░░░█████░    ░███  ░███      ░███ 
- █████  ░░█████    ░░███      █████ █████     █████
-░░░░░    ░░░░░      ░░░      ░░░░░ ░░░░░     ░░░░░ ]],
-  }
+  require('mini.starter').setup()
 end)
 
 -- Statusline. Sets `:h 'statusline'` to show more info in a line below window.
@@ -251,8 +240,8 @@ now_if_args(function()
   -- - `g?` to see available bookmarks
   local add_marks = function()
     MiniFiles.set_bookmark('c', vim.fn.stdpath 'config', { desc = 'Config' })
-    local minideps_plugins = vim.fn.stdpath 'data' .. '/site/pack/deps/opt'
-    MiniFiles.set_bookmark('p', minideps_plugins, { desc = 'Plugins' })
+    local vimpack_plugins = vim.fn.stdpath 'data' .. '/site/pack/core/opt'
+    MiniFiles.set_bookmark('p', vimpack_plugins, { desc = 'Plugins' })
     MiniFiles.set_bookmark('w', vim.fn.getcwd, { desc = 'Working directory' })
   end
   Config.new_autocmd('User', 'MiniFilesExplorerOpen', add_marks, 'Add bookmarks')
@@ -273,7 +262,7 @@ now_if_args(function()
   -- searches up the file tree until the first root marker ('.git' or 'Makefile')
   -- and sets their parent directory as a current directory.
   -- This is helpful when simultaneously dealing with files from several projects.
-  MiniMisc.setup_auto_root { '.git', 'package.json', 'Makefile' }
+  MiniMisc.setup_auto_root { '.git', '.gitignore', 'package.json', 'Makefile' }
 
   -- Restore latest cursor position on file open
   MiniMisc.setup_restore_cursor()

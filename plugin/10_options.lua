@@ -8,8 +8,12 @@
 -- Here `vim.o.xxx = value` sets default value of option `xxx` to `value`.
 -- See `:h 'xxx'` (replace `xxx` with actual option name).
 --
--- Option values can be customized on per buffer or window basis.
+-- Option values can be customized on a per buffer or window basis.
 -- See 'after/ftplugin/' for common example.
+--
+-- Notes:
+-- - Some options (like `:h 'exrc'`) need to be set before this file is sourced.
+--   Set them directly at the bottom of the 'init.lua' file.
 
 -- stylua: ignore start
 -- The next part (until `-- stylua: ignore end`) is aligned manually for easier
@@ -17,19 +21,19 @@
 
 -- General ====================================================================
 vim.g.mapleader = ' ' -- Use `<Space>` as <Leader> key
-vim.g.have_nerd_font = true
 
 vim.o.mouse       = 'a'            -- Enable mouse
 vim.o.mousescroll = 'ver:25,hor:6' -- Customize mouse scroll
-vim.o.swapfile    = false
+vim.o.swapfile    = false          -- Disable swapfile
 vim.o.switchbuf   = 'usetab'       -- Use already opened buffers when switching
 vim.o.undofile    = true           -- Enable persistent undo
 
-vim.o.shada = "'100,<50,s10,:1000,/100,@100,h" -- Limit ShaDa file (for startup)
-
+-- Sync clipboard
 vim.schedule(function()
   vim.o.clipboard = "unnamedplus"
 end)
+
+vim.o.shada = "'100,<50,s10,:1000,/100,@100,h" -- Limit ShaDa file (for startup)
 
 -- Enable all filetype plugins and syntax (if not enabled, for better startup)
 vim.cmd('filetype plugin indent on')
@@ -43,8 +47,9 @@ vim.o.cursorline     = true       -- Enable current line highlighting
 vim.o.linebreak      = true       -- Wrap lines at 'breakat' (if 'wrap' is set)
 vim.o.list           = true       -- Show helpful text indicators
 vim.o.number         = true       -- Show line numbers
+vim.o.pumborder      = 'single'   -- Use border in popup menu
 vim.o.pumheight      = 10         -- Make popup menu smaller
-vim.o.relativenumber = true
+vim.o.pummaxwidth    = 100        -- Make popup menu not too wide
 vim.o.ruler          = false      -- Don't show cursor coordinates
 vim.o.shortmess      = 'CFOSWaco' -- Disable some built-in completion messages
 vim.o.showmode       = false      -- Don't show mode in command line
@@ -56,8 +61,6 @@ vim.o.winborder      = 'single'   -- Use border in floating windows
 vim.o.wrap           = false      -- Don't visually wrap lines (toggle with \w)
 
 vim.o.cursorlineopt  = 'screenline,number' -- Show cursor line per screen line
-
-vim.o.termguicolors  = true
 
 -- Special UI symbols. More is set via 'mini.basics' later.
 vim.o.fillchars = 'eob: ,fold:╌'
@@ -91,8 +94,9 @@ vim.o.iskeyword = '@,48-57,_,192-255,-' -- Treat dash as `word` textobject part
 vim.o.formatlistpat = [[^\s*[0-9\-\+\*]\+[\.\)]*\s\+]]
 
 -- Built-in completion
-vim.o.complete    = '.,w,b,kspell'                  -- Use less sources
-vim.o.completeopt = 'menuone,noselect,fuzzy,nosort' -- Use custom behavior
+vim.o.complete        = '.,w,b,kspell'                  -- Use less sources
+vim.o.completeopt     = 'menuone,noselect,fuzzy,nosort' -- Use custom behavior
+vim.o.completetimeout = 100                             -- Limit sources delay
 
 -- Autocommands ===============================================================
 
@@ -119,13 +123,7 @@ local diagnostic_opts = {
   virtual_lines = false,
   virtual_text = {
     current_line = true,
-    -- severity = { min = 'ERROR', max = 'ERROR' },
-    text = {
-      [vim.diagnostic.severity.ERROR] = '󰅚 ',
-      [vim.diagnostic.severity.WARN] = '󰀪 ',
-      [vim.diagnostic.severity.INFO] = '󰋽 ',
-      [vim.diagnostic.severity.HINT] = '󰌶 ',
-    },
+    severity = { min = 'ERROR', max = 'ERROR' },
   },
 
   -- Don't update diagnostics when typing
@@ -133,5 +131,5 @@ local diagnostic_opts = {
 }
 
 -- Use `later()` to avoid sourcing `vim.diagnostic` on startup
-MiniDeps.later(function() vim.diagnostic.config(diagnostic_opts) end)
+Config.later(function() vim.diagnostic.config(diagnostic_opts) end)
 -- stylua: ignore end
