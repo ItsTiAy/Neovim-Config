@@ -118,7 +118,22 @@ end)
 -- - `:h MiniStarter-example-config` - non-default config examples
 -- - `:h MiniStarter-lifecycle` - how to work with Starter buffer
 now(function()
-  require('mini.starter').setup()
+  require('mini.starter').setup {
+    content_hooks = {
+      require('mini.starter').gen_hook.aligning('center', 'center'),
+    },
+    header = function()
+      local version = vim.version()
+      local version_str = string.format('v%d.%d.%d', version.major, version.minor, version.patch)
+      return table.concat({
+        '                    │ ╲ ││',
+        '                    ││╲╲││',
+        '                    ││ ╲ │',
+        '',
+        '                 NVIM ' .. version_str,
+      }, '\n')
+    end,
+  }
 end)
 
 -- Statusline. Sets `:h 'statusline'` to show more info in a line below window.
@@ -269,7 +284,7 @@ now_if_args(function()
 
   -- Synchronize terminal emulator background with Neovim's background to remove
   -- possibly different color padding around Neovim instance
-  MiniMisc.setup_termbg_sync()
+  -- MiniMisc.setup_termbg_sync()
 end)
 
 -- Step two ===================================================================
