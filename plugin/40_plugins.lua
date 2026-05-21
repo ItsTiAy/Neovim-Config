@@ -143,8 +143,8 @@ later(function()
     -- Make sure that necessary CLI tool is available
     formatters_by_ft = {
       lua = { 'stylua' },
-      css = { 'prettierd' },
-      scss = { 'prettierd' },
+      css = { 'stylelint', 'prettierd' },
+      scss = { 'stylelint', 'prettierd' },
       html = { 'prettierd' },
       javascript = { 'prettierd' },
       typescript = { 'prettierd' },
@@ -155,6 +155,12 @@ later(function()
     format_on_save = {
       lsp_format = 'fallback',
       timeout_ms = 5000,
+    },
+    formatters = {
+      stylelint = {
+        args = { '--fix', '--config', vim.fn.stdpath 'config' .. '/stylelint.config.js', '--stdin-filename', '$FILENAME', '--stdin' },
+        stdin = true,
+      },
     },
   }
 end)
@@ -194,6 +200,7 @@ now_if_args(function()
     ensure_installed = {
       'stylua',
       'prettierd',
+      'stylelint',
       'lua_ls',
       'css-lsp',
       'html-lsp',
